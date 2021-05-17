@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
+
 
 namespace CollectionDataBinding
 {
@@ -21,26 +23,27 @@ namespace CollectionDataBinding
     /// </summary>
     public partial class MainWindow : Window
     {
-        private List<User> users;
+        private ObservableCollection<User> users;
         public MainWindow()
         {
             InitializeComponent();
             LoadUsers();
+            DataContext = users;
         }
         private void LoadUsers()
         {
-            users = new List<User>();
+            users = new ObservableCollection<User>();
             users.Add(new User() { Name = "Peter Parker" });
             users.Add(new User() { Name = "Tony Stark" });
             users.Add(new User() { Name = "Natasha Romanoff" });
-            usersListBox.ItemsSource = users;
+            //usersListBox.ItemsSource = users;
         }
 
         private void addUserButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(userTextBox.Text))
             {
-                User user = new User() { Name = userTextBox.Text };
+                User user = new User() { Name = "Nuevo usuario" };
                 users.Add(user);
                 usersListBox.SelectedItem = user;
                 UpdateView();
@@ -64,7 +67,7 @@ namespace CollectionDataBinding
             if (usersListBox.SelectedItem != null)
             {
                 users.Remove(usersListBox.SelectedItem as User);
-                userTextBox.Text = "";
+                //userTextBox.Text = "";
                 UpdateView();
             }
         }
@@ -82,15 +85,6 @@ namespace CollectionDataBinding
                 usersListBox.SelectedIndex = -1;
                 deleteUserButton.IsEnabled = false;
                 changeUserButton.IsEnabled = false;
-            }
-        }
-
-        private void usersListBox_SelectionChanged(object sender,
- SelectionChangedEventArgs e)
-        {
-            if (usersListBox.SelectedItem != null)
-            {
-                userTextBox.Text = (usersListBox.SelectedItem as User).Name;
             }
         }
     }
